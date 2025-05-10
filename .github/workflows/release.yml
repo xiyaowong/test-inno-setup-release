@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Setup Inno Setup
+        uses: MinoruSekine/setup-scoop@v4.0.1
+        with:
+          buckets: extras
+          apps: inno-setup
+
+      - name: Publish App
+        run: |
+          dotnet publish .\TheApp\ -r win-x64 -c Release --sc --nologo
+
+      - name: Build Installer
+        run: |
+          mkdir .\TheApp\bin\Release\net9.0-windows\win-x64\__files__
+          mv .\TheApp\bin\Release\net9.0-windows\win-x64\publish\* .\TheApp\bin\Release\net9.0-windows\win-x64\__files__
+          mv .\TheApp\bin\Release\net9.0-windows\win-x64\__files__\TheApp.exe .\TheApp\bin\Release\net9.0-windows\win-x64\publish
+          iscc.exe ./Installer/installer.iss
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            - ./Installer/output/*-setup.exe
