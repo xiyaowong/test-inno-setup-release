@@ -40,4 +40,4 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            - Installer\output\*setup.exe
+            - ./Installer/output/*setup.exe
