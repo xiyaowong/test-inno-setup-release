@@ -33,7 +33,7 @@ jobs:
           mkdir .\TheApp\bin\Release\net9.0-windows\win-x64\__files__
           mv .\TheApp\bin\Release\net9.0-windows\win-x64\publish\* .\TheApp\bin\Release\net9.0-windows\win-x64\__files__
           mv .\TheApp\bin\Release\net9.0-windows\win-x64\__files__\TheApp.exe .\TheApp\bin\Release\net9.0-windows\win-x64\publish
-          iscc.exe ./Installer/installer.iss
+          iscc.exe ./Installer/installer.iss /Q
 
       - name: Release
         uses: softprops/action-gh-release@v2
